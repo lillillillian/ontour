@@ -1,53 +1,55 @@
 // import React from "react";
 import PropTypes from "prop-types";
-import '../Styles/hometile.css';
-import Rating from '@mui/material/Rating';
-import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
-// import { useEffect, useRef } from "react";
+import "../Styles/hometile.css";
+import Rating from "@mui/material/Rating";
+import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
 import home_styles from "../Styles/home_styles";
 import React, { useState, useEffect, useRef } from "react";
 import CircularProgress from '@mui/material/CircularProgress';
 
-
 export default function HomeTile(props) {
     const [isImageLoading, setImageLoading] = useState(true);
-    const totalReviewTextRef = useRef(null);
-    const starBoxRef = useRef(null);
-    const overlayRef = useRef(null);
-    const imageRef = useRef(null);
+  const totalReviewTextRef = useRef(null);
+  const starBoxRef = useRef(null);
+  const overlayRef = useRef(null);
+  const imageRef = useRef(null);
 
-    useEffect(() => {
-        if (starBoxRef.current) {
-            // const starBoxHeight = starBoxRef.current.offsetHeight;
-            const starBoxWidth = starBoxRef.current.offsetWidth;
-            totalReviewTextRef.current.style.marginLeft = `${starBoxWidth * 0.05}px`;
-        }
-    }, [])
-    const searchName = props.loading ? "" : props.name.replace(/\s+/g, '_').toLowerCase();
-    const link = props.isArtist ?
-        "/artist?artist=" + searchName + "&id=" + props.id :
-        "/venue?venue=" + searchName + "&id=" + props.id
-
-    const navigate = useNavigate();
-    const handleTileClick = () => {
-        navigate(link);
+  useEffect(() => {
+    if (starBoxRef.current) {
+      // const starBoxHeight = starBoxRef.current.offsetHeight;
+      const starBoxWidth = starBoxRef.current.offsetWidth;
+      totalReviewTextRef.current.style.marginLeft = `${starBoxWidth * 0.05}px`;
     }
-    
+  }, []);
+  const searchName = props.loading
+    ? ""
+    : props.name.replace(/\s+/g, "_").toLowerCase();
+  const link = props.isArtist
+    ? "/artist?artist=" + searchName + "&id=" + props.id
+    : "/venue?venue=" + searchName + "&id=" + props.id;
+
+  const navigate = useNavigate();
+  const handleTileClick = () => {
+    document.body.style.cursor = "initial";
+    console.log("clicked");
+    navigate(link);
+  };
+
     const handleImageLoaded = () => {
         setImageLoading(false);
     }
-    const handleMouseEnter = (e) => {
-        overlayRef.current.style.opacity = 1;
-        imageRef.current.style.opacity = 0.4;
-        document.body.style.cursor = "pointer";
-    }
-    const handleMouseLeave = (e) => {
-        overlayRef.current.style.opacity = 0;
-        imageRef.current.style.opacity = 1;
-        document.body.style.cursor = "initial";
-    }
-
+  const handleMouseEnter = (e) => {
+    overlayRef.current.style.opacity = 1;
+    imageRef.current.style.opacity = 0.4;
+    document.body.style.cursor = "pointer";
+  };
+  const handleMouseLeave = (e) => {
+    overlayRef.current.style.opacity = 0;
+    imageRef.current.style.opacity = 1;
+    document.body.style.cursor = "initial";
+  };
 
     return (
         <div 
@@ -61,15 +63,14 @@ export default function HomeTile(props) {
                     <CircularProgress />
                 </div>
             )}
-            <img
-                ref={imageRef}
-                src={props.imageURL} 
-                alt={`${props.name} image`} 
+            <img 
                 onLoad={handleImageLoaded}
                 style={{ 
                     display: isImageLoading ? 'none' : 'block', 
                     ...home_styles.homeTile.image 
                 }}
+                ref={imageRef}
+                src={props.imageURL} alt="" 
             />
             <div ref={overlayRef} style={home_styles.homeTile.middle}>
                 <h1 className="text">{props.name}</h1>
@@ -93,26 +94,26 @@ export default function HomeTile(props) {
 }
 
 const styles = {
-    RatingRow: {
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        spacing: 1,
-    },
-    TotalReviewsText: {
-        marginLeft: "0.5rem",
-        color: "white",
-        position: "center",
-    },
-}
+  RatingRow: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    spacing: 1,
+  },
+  TotalReviewsText: {
+    marginLeft: "0.5rem",
+    color: "white",
+    position: "center",
+  },
+};
 
 HomeTile.propTypes = {
-    name: PropTypes.string,
-    imageURL: PropTypes.string,
-    rating: PropTypes.number,
-    reviewCount: PropTypes.number,
-    isArtist: PropTypes.bool,
-    id: PropTypes.string,
-    loading: PropTypes.bool,
+  name: PropTypes.string,
+  imageURL: PropTypes.string,
+  rating: PropTypes.number,
+  reviewCount: PropTypes.number,
+  isArtist: PropTypes.bool,
+  id: PropTypes.string,
+  loading: PropTypes.bool,
 };
