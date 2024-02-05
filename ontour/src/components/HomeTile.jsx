@@ -1,14 +1,17 @@
-import React from "react";
+// import React from "react";
 import PropTypes from "prop-types";
 import '../Styles/hometile.css';
 import Rating from '@mui/material/Rating';
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
-import { useEffect, useRef } from "react";
+// import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
 import home_styles from "../Styles/home_styles";
+import React, { useState, useEffect, useRef } from "react";
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 export default function HomeTile(props) {
+    const [isImageLoading, setImageLoading] = useState(true);
     const totalReviewTextRef = useRef(null);
     const starBoxRef = useRef(null);
     const overlayRef = useRef(null);
@@ -31,6 +34,9 @@ export default function HomeTile(props) {
         navigate(link);
     }
     
+    const handleImageLoaded = () => {
+        setImageLoading(false);
+    }
     const handleMouseEnter = (e) => {
         overlayRef.current.style.opacity = 1;
         imageRef.current.style.opacity = 0.4;
@@ -50,10 +56,20 @@ export default function HomeTile(props) {
             onMouseLeave={handleMouseLeave}
             style={home_styles.homeTile.container}
         >
-            <img 
-                style={home_styles.homeTile.image} 
+            {isImageLoading && (
+                <div style={home_styles.homeTile.spinner}>
+                    <CircularProgress />
+                </div>
+            )}
+            <img
                 ref={imageRef}
-                src={props.imageURL} alt="" 
+                src={props.imageURL} 
+                alt={`${props.name} image`} 
+                onLoad={handleImageLoaded}
+                style={{ 
+                    display: isImageLoading ? 'none' : 'block', 
+                    ...home_styles.homeTile.image 
+                }}
             />
             <div ref={overlayRef} style={home_styles.homeTile.middle}>
                 <h1 className="text">{props.name}</h1>

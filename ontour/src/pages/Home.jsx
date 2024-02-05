@@ -16,6 +16,7 @@ import { GoogleMap, MarkerF, InfoWindowF} from '@react-google-maps/api';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import GeotaggingSearchbar from "../components/GeotaggingSearchbar";
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 
@@ -38,6 +39,12 @@ class UpcomingEvent {
   }
 }
 
+// Placeholder component for loading state
+const LoadingPlaceholder = () => (
+    <Grid item xs={6} md={3} style={{ height: "30vh", display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <CircularProgress />
+    </Grid>
+);
 
 function Home() {
     const [artist_name, setName] = useState('')
@@ -63,6 +70,7 @@ function Home() {
     const [isOpen, setIsOpen] = useState(false);
     const [infoWindowData, setInfoWindowData] = useState();
     const [hoveredVenue, setHoveredVenue] = useState();
+    const displayPlaceholders = loading || Object.keys(artistList).length === 0;
     
     const handleHoveredIndexChange = (index) => {
         setHoveredVenue(index);
@@ -322,9 +330,10 @@ function Home() {
                         <h1 style={{ color: "#FFFFFF" }} class="homebanner">Review the artists you love</h1>
                     </Grid>
                     <Grid item xs={12} container spacing={2}>
-                        {Object.keys(artistList).map((artist, index) => {
-                            return (
-                                <Grid item xs={6} md={3} style={{ height: "30vh"}}>
+                        {displayPlaceholders
+                            ? Array.from({ length: 8 }, (_, index) => <LoadingPlaceholder key={index} />)
+                            : Object.keys(artistList).map((artist, index) => (
+                                <Grid item xs={6} md={3} style={{ height: "30vh" }}>
                                     <HomeTile
                                         isArtist={true}
                                         imageURL={artistList[artist].imageURL}
@@ -335,8 +344,7 @@ function Home() {
                                         reviewCount={reviewCount[artist]}
                                     />
                                 </Grid>
-                            )
-                        })}
+                            ))}
                     </Grid>
                 </Grid>
                 <Grid item xs={12}>
